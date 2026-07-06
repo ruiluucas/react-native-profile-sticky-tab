@@ -1,8 +1,6 @@
 import ProfileStickyTab from "@/core";
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import { TabBar } from "react-native-tab-view";
-
-const data = Array.from({ length: 200 }, (_, index) => index);
 
 export default function Index() {
   return (
@@ -20,13 +18,13 @@ export default function Index() {
         tabKeyScenes={[
           {
             key: "first",
-            title: "FlatList",
+            title: "First",
             renderComponent: (p) => (
               <ProfileStickyTab.FlatList
                 stickyTab={p}
-                data={data}
+                data={Array.from({ length: 200 })}
                 renderItem={({ index }) => (
-                  <Text style={[styles.item, styles.flatListItem]}>
+                  <Text style={{ backgroundColor: "red", color: "white" }}>
                     {index}
                   </Text>
                 )}
@@ -35,28 +33,13 @@ export default function Index() {
           },
           {
             key: "second",
-            title: "FlashList",
+            title: "Second",
             renderComponent: (p) => (
               <ProfileStickyTab.FlatList
                 stickyTab={p}
-                data={data}
+                data={Array.from({ length: 200 })}
                 renderItem={({ index }) => (
-                  <Text style={[styles.item, styles.flatListItem]}>
-                    {index}
-                  </Text>
-                )}
-              />
-            ),
-          },
-          {
-            key: "third",
-            title: "ScrollView",
-            renderComponent: (p) => (
-              <ProfileStickyTab.FlatList
-                stickyTab={p}
-                data={data}
-                renderItem={({ index }) => (
-                  <Text style={[styles.item, styles.flatListItem]}>
+                  <Text style={{ backgroundColor: "gray", color: "white" }}>
                     {index}
                   </Text>
                 )}
@@ -75,20 +58,3 @@ export default function Index() {
     </ProfileStickyTab.Provider>
   );
 }
-
-const styles = StyleSheet.create({
-  item: {
-    color: "white",
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-  },
-  flatListItem: {
-    backgroundColor: "red",
-  },
-  flashListItem: {
-    backgroundColor: "gray",
-  },
-  scrollViewItem: {
-    backgroundColor: "purple",
-  },
-});
