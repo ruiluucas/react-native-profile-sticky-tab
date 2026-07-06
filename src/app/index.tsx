@@ -1,98 +1,94 @@
-import * as Device from 'expo-device';
-import { Platform, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import ProfileStickyTab from "@/core";
+import { StyleSheet, Text, View } from "react-native";
+import { TabBar } from "react-native-tab-view";
 
-import { AnimatedIcon } from '@/components/animated-icon';
-import { HintRow } from '@/components/hint-row';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { WebBadge } from '@/components/web-badge';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
+const data = Array.from({ length: 200 }, (_, index) => index);
 
-function getDevMenuHint() {
-  if (Platform.OS === 'web') {
-    return <ThemedText type="small">use browser devtools</ThemedText>;
-  }
-  if (Device.isDevice) {
-    return (
-      <ThemedText type="small">
-        shake device or press <ThemedText type="code">m</ThemedText> in terminal
-      </ThemedText>
-    );
-  }
-  const shortcut = Platform.OS === 'android' ? 'cmd+m (or ctrl+m)' : 'cmd+d';
+export default function Index() {
   return (
-    <ThemedText type="small">
-      press <ThemedText type="code">{shortcut}</ThemedText>
-    </ThemedText>
-  );
-}
-
-export default function HomeScreen() {
-  return (
-    <ThemedView style={styles.container}>
-      <SafeAreaView style={styles.safeArea}>
-        <ThemedView style={styles.heroSection}>
-          <AnimatedIcon />
-          <ThemedText type="title" style={styles.title}>
-            Welcome to&nbsp;Expo
-          </ThemedText>
-        </ThemedView>
-
-        <ThemedText type="code" style={styles.code}>
-          get started
-        </ThemedText>
-
-        <ThemedView type="backgroundElement" style={styles.stepContainer}>
-          <HintRow
-            title="Try editing"
-            hint={<ThemedText type="code">src/app/index.tsx</ThemedText>}
+    <ProfileStickyTab.Provider>
+      <ProfileStickyTab
+        header={
+          <View
+            style={{
+              height: 100,
+              backgroundColor: "orange",
+            }}
           />
-          <HintRow title="Dev tools" hint={getDevMenuHint()} />
-          <HintRow
-            title="Fresh start"
-            hint={<ThemedText type="code">npm run reset-project</ThemedText>}
-          />
-        </ThemedView>
-
-        {Platform.OS === 'web' && <WebBadge />}
-      </SafeAreaView>
-    </ThemedView>
+        }
+        renderTabBar={(props) => <TabBar {...props} />}
+        tabKeyScenes={[
+          {
+            key: "first",
+            title: "FlatList",
+            renderComponent: (p) => (
+              <ProfileStickyTab.FlatList
+                stickyTab={p}
+                data={data}
+                renderItem={({ index }) => (
+                  <Text style={[styles.item, styles.flatListItem]}>
+                    {index}
+                  </Text>
+                )}
+              />
+            ),
+          },
+          {
+            key: "second",
+            title: "FlashList",
+            renderComponent: (p) => (
+              <ProfileStickyTab.FlatList
+                stickyTab={p}
+                data={data}
+                renderItem={({ index }) => (
+                  <Text style={[styles.item, styles.flatListItem]}>
+                    {index}
+                  </Text>
+                )}
+              />
+            ),
+          },
+          {
+            key: "third",
+            title: "ScrollView",
+            renderComponent: (p) => (
+              <ProfileStickyTab.FlatList
+                stickyTab={p}
+                data={data}
+                renderItem={({ index }) => (
+                  <Text style={[styles.item, styles.flatListItem]}>
+                    {index}
+                  </Text>
+                )}
+              />
+            ),
+          },
+        ]}
+      >
+        <View
+          style={{
+            height: 300,
+            backgroundColor: "blue",
+          }}
+        />
+      </ProfileStickyTab>
+    </ProfileStickyTab.Provider>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    flexDirection: 'row',
+  item: {
+    color: "white",
+    paddingHorizontal: 16,
+    paddingVertical: 12,
   },
-  safeArea: {
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    alignItems: 'center',
-    gap: Spacing.three,
-    paddingBottom: BottomTabInset + Spacing.three,
-    maxWidth: MaxContentWidth,
+  flatListItem: {
+    backgroundColor: "red",
   },
-  heroSection: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    gap: Spacing.four,
+  flashListItem: {
+    backgroundColor: "gray",
   },
-  title: {
-    textAlign: 'center',
-  },
-  code: {
-    textTransform: 'uppercase',
-  },
-  stepContainer: {
-    gap: Spacing.three,
-    alignSelf: 'stretch',
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.four,
-    borderRadius: Spacing.four,
+  scrollViewItem: {
+    backgroundColor: "purple",
   },
 });
