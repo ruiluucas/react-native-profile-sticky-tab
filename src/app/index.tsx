@@ -17,7 +17,7 @@ export default function Index() {
         renderTabBar={(props) => <TabBar {...props} />}
         tabKeyScenes={[
           {
-            key: "first",
+            key: "1",
             title: "First",
             renderComponent: (p) => (
               <ProfileStickyTab.FlatList
@@ -28,11 +28,44 @@ export default function Index() {
                     {index}
                   </Text>
                 )}
+                initialNumToRender={50}
               />
             ),
           },
           {
-            key: "second",
+            key: "2",
+            title: "First",
+            renderComponent: (p) => (
+              <ProfileStickyTab.FlatList
+                stickyTab={p}
+                data={Array.from({ length: 200 })}
+                renderItem={({ index }) => (
+                  <Text style={{ backgroundColor: "red", color: "white" }}>
+                    {index}
+                  </Text>
+                )}
+                initialNumToRender={50}
+              />
+            ),
+          },
+          {
+            key: "3",
+            title: "First",
+            renderComponent: (p) => (
+              <ProfileStickyTab.FlatList
+                stickyTab={p}
+                data={Array.from({ length: 200 })}
+                renderItem={({ index }) => (
+                  <Text style={{ backgroundColor: "red", color: "white" }}>
+                    {index}
+                  </Text>
+                )}
+                initialNumToRender={50}
+              />
+            ),
+          },
+          {
+            key: "4",
             title: "Second",
             renderComponent: (p) => (
               <ProfileStickyTab.FlatList
@@ -43,6 +76,7 @@ export default function Index() {
                     {index}
                   </Text>
                 )}
+                initialNumToRender={50}
               />
             ),
           },

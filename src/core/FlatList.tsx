@@ -7,13 +7,11 @@ import Animated, {
   useSharedValue,
 } from "react-native-reanimated";
 import { useCoreContext } from "./Context";
+import { stickyScrollHandlers } from "./handlers/scrollHandlers";
 
 export interface ProfileStickyTabFlatListProps<T> extends React.ComponentProps<
   typeof Animated.FlatList<T>
 > {
-  /**
-   * Propriedades exclusivas para a integração com o resto da biblioteca.
-   */
   stickyTab: { key: string; index: number };
 }
 
@@ -33,22 +31,9 @@ function FlatList<T>({
   const animatedRef = useAnimatedRef<Animated.FlatList<T>>();
   const listY = useSharedValue(0);
 
-  const onScroll = useAnimatedScrollHandler({
-    onScroll: (e) => {
-      const currentY = Math.max(e.contentOffset.y, 0);
-      listY.set(currentY);
-
-      if (stickyTab.index === sharedCurrentIndex.value) {
-        scrollY.set(currentY);
-      }
-    },
-    onBeginDrag: () => {
-      if (stickyTab.index === sharedCurrentIndex.value) syncTrigger.set(false);
-    },
-    onEndDrag: () => {
-      if (stickyTab.index === sharedCurrentIndex.value) syncTrigger.set(true);
-    },
-  });
+  const onScroll = useAnimatedScrollHandler(
+    stickyScrollHandlers(listY, stickyTab),
+  );
 
   useAnimatedReaction(
     () => ({
@@ -66,13 +51,11 @@ function FlatList<T>({
 
       if (justBecameActive || shouldSyncInactive) {
         const globalHeaderY = Math.min(state.scrollY, infoHeight.value);
-
         if (
           listY.value >= infoHeight.value &&
           globalHeaderY >= infoHeight.value
         )
           return;
-
         scrollTo(animatedRef, 0, globalHeaderY, false);
       }
     },
@@ -87,7 +70,12 @@ function FlatList<T>({
       ref={animatedRef}
       ListHeaderComponent={<Animated.View style={listHeaderComponentStyle} />}
       onScroll={onScroll}
-      initialScrollIndex={scrollY as any}
+      onContentSizeChange={() => {
+        animatedRef.current?.scrollToOffset({
+          offset: Math.min(scrollY.get(), infoHeight.get()),
+          animated: false,
+        });
+      }}
       scrollEventThrottle={16}
       {...props}
     />

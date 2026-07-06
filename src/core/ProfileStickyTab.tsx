@@ -125,6 +125,7 @@ const ProfileStickyTabComponent = ({
         renderScene={renderScene}
         onIndexChange={handleIndexChange}
         renderTabBar={renderTabBarWrapper}
+        lazyPreloadDistance={1}
         lazy
       />
     </>
@@ -133,7 +134,7 @@ const ProfileStickyTabComponent = ({
 
 const ProfileStickyTab = Object.assign(memo(ProfileStickyTabComponent), {
   FlatList: memo(FlatList),
-  Provider: Provider,
+  Provider: memo(Provider),
 });
 
 export { ProfileStickyTab };
