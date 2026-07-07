@@ -1,5 +1,3 @@
-.
-
 # react-native-profile-sticky-tab
 
 Componente de abas com cabeçalho fixo e área de perfil recolhível para React Native.
