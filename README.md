@@ -1,56 +1,140 @@
-# Welcome to your Expo app 👋
+# react-native-profile-sticky-tab
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Componente de abas com cabeçalho fixo e área de perfil recolhível para React Native.
 
-## Get started
+A biblioteca combina `react-native-tab-view` com listas animadas para manter o scroll sincronizado entre abas usando `react-native-reanimated`.
 
-1. Install dependencies
-
-   ```bash
-   npm install
-   ```
-
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+## Instalação
 
 ```bash
-npm run reset-project
+npm install react-native-profile-sticky-tab
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Dependências usadas pela biblioteca:
 
-### Other setup steps
+```bash
+npm install react-native-reanimated react-native-tab-view @shopify/flash-list
+```
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+Se o projeto ainda não usa Reanimated, finalize a configuração exigida pelo `react-native-reanimated` no seu app.
 
-## Learn more
+## Uso
 
-To learn more about developing your project with Expo, look at the following resources:
+```tsx
+import ProfileStickyTab from "react-native-profile-sticky-tab";
+import { Text, View } from "react-native";
+import { TabBar } from "react-native-tab-view";
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+export function ProfileScreen() {
+  return (
+    <ProfileStickyTab.Provider>
+      <ProfileStickyTab
+        header={<View style={{ height: 80, backgroundColor: "#111" }} />}
+        renderTabBar={(props) => <TabBar {...props} />}
+        tabKeyScenes={[
+          {
+            key: "posts",
+            title: "Posts",
+            renderComponent: (stickyTab) => (
+              <ProfileStickyTab.FlatList
+                stickyTab={stickyTab}
+                data={Array.from({ length: 50 })}
+                keyExtractor={(_, index) => String(index)}
+                renderItem={({ index }) => (
+                  <Text style={{ padding: 16 }}>Post {index}</Text>
+                )}
+              />
+            ),
+          },
+          {
+            key: "about",
+            title: "Sobre",
+            renderComponent: (stickyTab) => (
+              <ProfileStickyTab.ScrollView stickyTab={stickyTab}>
+                <Text style={{ padding: 16 }}>Conteúdo da aba Sobre</Text>
+              </ProfileStickyTab.ScrollView>
+            ),
+          },
+        ]}
+      >
+        <View style={{ height: 220, backgroundColor: "#2563eb" }} />
+      </ProfileStickyTab>
+    </ProfileStickyTab.Provider>
+  );
+}
+```
 
-## Join the community
+## Estrutura
 
-Join our community of developers creating universal apps.
+`ProfileStickyTab.Provider` deve envolver o componente principal. Ele mantém o estado compartilhado de scroll, índice ativo e alturas do layout.
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+`ProfileStickyTab` recebe o cabeçalho fixo, a área recolhível e a configuração das cenas de cada aba.
+
+`ProfileStickyTab.FlatList`, `ProfileStickyTab.FlashList` e `ProfileStickyTab.ScrollView` são os containers de conteúdo das abas. Use sempre o objeto recebido em `renderComponent` na prop `stickyTab`.
+
+## Props
+
+### `ProfileStickyTab`
+
+| Prop | Tipo | Descrição |
+| --- | --- | --- |
+| `header` | `ReactNode` | Conteúdo fixo no topo da tela. |
+| `children` | `ReactNode` | Conteúdo recolhível abaixo do header, normalmente informações do perfil. |
+| `renderTabBar` | `(props) => ReactNode` | Renderiza a tab bar do `react-native-tab-view`. |
+| `tabKeyScenes` | `TabScene[]` | Lista de abas e seus respectivos componentes. |
+
+### `tabKeyScenes`
+
+```ts
+type TabScene = {
+  key: string;
+  title: string;
+  renderComponent: (stickyTab: { key: string; index: number }) => ReactNode;
+  icon?: (color: string) => ReactNode;
+};
+```
+
+### Containers de aba
+
+Todos os containers recebem `stickyTab`.
+
+```tsx
+<ProfileStickyTab.FlatList stickyTab={stickyTab} />
+<ProfileStickyTab.FlashList stickyTab={stickyTab} />
+<ProfileStickyTab.ScrollView stickyTab={stickyTab} />
+```
+
+Além de `stickyTab`, cada container aceita as props nativas do componente correspondente:
+
+- `FlatList`: props de `Animated.FlatList`
+- `FlashList`: props de `@shopify/flash-list`
+- `ScrollView`: props de `Animated.ScrollView`
+
+## Exports
+
+```tsx
+import ProfileStickyTab, {
+  ProfileStickyTab as NamedProfileStickyTab,
+} from "react-native-profile-sticky-tab";
+
+import type {
+  ProfileStickyTabProps,
+  ProfileStickyTabFlatListProps,
+  ProfileStickyTabFlashListProps,
+  ProfileStickyTabScrollViewProps,
+} from "react-native-profile-sticky-tab";
+```
+
+## Exemplo local
+
+Este repositório inclui um exemplo em `example/index.tsx`.
+
+Para checar a tipagem:
+
+```bash
+npx tsc --noEmit
+```
+
+## Licença
+
+MIT

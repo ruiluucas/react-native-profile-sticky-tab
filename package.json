@@ -1,6 +1,6 @@
 {
   "name": "react-native-profile-sticky-tab",
-  "main": "expo-router/entry",
+  "main": "src/index.tsx",
   "version": "1.0.0",
   "dependencies": {
     "@expo/ui": "~57.0.3",
