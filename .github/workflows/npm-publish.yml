@@ -19,6 +19,8 @@ jobs:
 
       - run: npm ci
       - run: npm test --if-present
+      - run: npm run build
+      - run: npm pack --dry-run
       - run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
