@@ -9,6 +9,9 @@ import Animated, {
 } from "react-native-reanimated";
 import { useCoreContext } from "./Context";
 import { stickyScrollHandlers } from "./handlers/scrollHandlers";
+import { Dimensions } from "react-native";
+
+const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 export interface ProfileStickyTabFlatListProps<T> extends React.ComponentProps<
   typeof Animated.FlatList<T>
@@ -96,6 +99,16 @@ function FlatListInner<T>(
     });
   };
 
+  const contentContainerStyle = useAnimatedStyle(() => {
+    // A altura livre que a lista precisa ter para conseguir scrolar até o topo
+    // é o tamanho da tela menos o que fica fixo no topo (headerHeight + tabBarHeight)
+    const minHeight = SCREEN_HEIGHT - (headerHeight.value + tabBarHeight.value);
+
+    return {
+      minHeight: minHeight,
+    };
+  });
+
   return (
     <Animated.FlatList
       // 1) Spread primeiro: tudo que o usuário passar entra aqui.
@@ -104,6 +117,10 @@ function FlatListInner<T>(
       // (assim garantimos que a nossa lógica nunca é silenciosamente
       // sobrescrita, e a do usuário nunca é descartada).
       ref={setRefs}
+      contentContainerStyle={[
+        props.contentContainerStyle,
+        contentContainerStyle,
+      ]}
       ListHeaderComponent={<Animated.View style={listHeaderComponentStyle} />}
       onScroll={onScroll}
       onContentSizeChange={handleContentSizeChange}

@@ -1,6 +1,6 @@
 {
   "name": "react-native-profile-sticky-tab",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Componente de abas com cabeçalho fixo e área de perfil recolhível para React Native.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

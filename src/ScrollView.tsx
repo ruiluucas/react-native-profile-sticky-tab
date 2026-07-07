@@ -1,14 +1,17 @@
 import React, { forwardRef, ReactNode, useCallback } from "react";
+import { Dimensions } from "react-native";
 import Animated, {
-    scrollTo,
-    useAnimatedReaction,
-    useAnimatedRef,
-    useAnimatedScrollHandler,
-    useAnimatedStyle,
-    useSharedValue,
+  scrollTo,
+  useAnimatedReaction,
+  useAnimatedRef,
+  useAnimatedScrollHandler,
+  useAnimatedStyle,
+  useSharedValue,
 } from "react-native-reanimated";
 import { useCoreContext } from "./Context";
 import { stickyScrollHandlers } from "./handlers/scrollHandlers";
+
+const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 export interface ProfileStickyTabScrollViewProps extends React.ComponentProps<
   typeof Animated.ScrollView
@@ -94,11 +97,25 @@ function ScrollViewInner(
     });
   };
 
+  const contentContainerStyle = useAnimatedStyle(() => {
+    // A altura livre que a lista precisa ter para conseguir scrolar até o topo
+    // é o tamanho da tela menos o que fica fixo no topo (headerHeight + tabBarHeight)
+    const minHeight = SCREEN_HEIGHT - (headerHeight.value + tabBarHeight.value);
+
+    return {
+      minHeight: minHeight,
+    };
+  });
+
   return (
     <Animated.ScrollView
       {...props}
       ref={setRefs}
       onScroll={onScroll}
+      contentContainerStyle={[
+        props.contentContainerStyle,
+        contentContainerStyle,
+      ]}
       onContentSizeChange={handleContentSizeChange}
       scrollEventThrottle={props.scrollEventThrottle ?? 16}
     >

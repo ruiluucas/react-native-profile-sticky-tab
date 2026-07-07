@@ -1,19 +1,22 @@
 import {
-    FlashList as FL,
-    FlashListProps,
-    FlashListRef,
+  FlashList as FL,
+  FlashListProps,
+  FlashListRef,
 } from "@shopify/flash-list";
 import React, { forwardRef, useCallback } from "react";
+import { Dimensions } from "react-native";
 import Animated, {
-    scrollTo,
-    useAnimatedReaction,
-    useAnimatedRef,
-    useAnimatedScrollHandler,
-    useAnimatedStyle,
-    useSharedValue,
+  scrollTo,
+  useAnimatedReaction,
+  useAnimatedRef,
+  useAnimatedScrollHandler,
+  useAnimatedStyle,
+  useSharedValue,
 } from "react-native-reanimated";
 import { useCoreContext } from "./Context";
 import { stickyScrollHandlers } from "./handlers/scrollHandlers";
+
+const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 // Criação segura do componente animado para evitar erros de tipagem do TypeScript
 const AnimatedFlashList = Animated.createAnimatedComponent(
@@ -100,10 +103,24 @@ function FlashListInner<T>(
     });
   };
 
+  const contentContainerStyle = useAnimatedStyle(() => {
+    // A altura livre que a lista precisa ter para conseguir scrolar até o topo
+    // é o tamanho da tela menos o que fica fixo no topo (headerHeight + tabBarHeight)
+    const minHeight = SCREEN_HEIGHT - (headerHeight.value + tabBarHeight.value);
+
+    return {
+      minHeight: minHeight,
+    };
+  });
+
   return (
     <AnimatedFlashList
       {...props}
       ref={setRefs}
+      contentContainerStyle={[
+        props.contentContainerStyle,
+        contentContainerStyle,
+      ]}
       // No FlashList, usamos o espaçador como cabeçalho base. Se o usuário passar um
       // ListHeaderComponent próprio, você pode optar por encapsulá-lo dentro dessa View.
       ListHeaderComponent={<Animated.View style={listHeaderComponentStyle} />}
