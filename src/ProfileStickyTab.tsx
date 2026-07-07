@@ -10,6 +10,8 @@ import { TabView } from "react-native-tab-view";
 import { Provider, useCoreContext } from "./Context";
 import { FlatList } from "./FlatList";
 import ProfileStickyTabProps from "./ProfileStickyTab.types";
+import { ScrollView } from "./ScrollView";
+import { FlashList } from "./FlashList";
 
 const styles = StyleSheet.create({
   header: {
@@ -134,6 +136,8 @@ const ProfileStickyTabComponent = ({
 
 const ProfileStickyTab = Object.assign(memo(ProfileStickyTabComponent), {
   FlatList: memo(FlatList),
+  FlashList: memo(FlashList),
+  ScrollView: memo(ScrollView),
   Provider: memo(Provider),
 });
 

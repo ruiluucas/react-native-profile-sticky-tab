@@ -8,14 +8,16 @@ export function stickyScrollHandlers(
     index: number;
   },
 ) {
-  const { scrollY, sharedCurrentIndex, syncTrigger } = useCoreContext();
+  const { scrollY, sharedCurrentIndex, syncTrigger, infoHeight } =
+    useCoreContext();
 
   return {
     onScroll: (e) => {
       "worklet";
       const currentY = Math.max(e.contentOffset.y, 0);
       listY.set(currentY);
-      if (stickyTab.index === sharedCurrentIndex.value) scrollY.set(currentY);
+      if (stickyTab.index === sharedCurrentIndex.value)
+        scrollY.set(Math.min(currentY, infoHeight.value));
     },
     onBeginDrag: () => {
       "worklet";
