@@ -1,5 +1,5 @@
 import { createContext, ReactNode, useContext, useState } from "react";
-import { useSharedValue } from "react-native-reanimated";
+import { useDerivedValue, useSharedValue } from "react-native-reanimated";
 import { ContextType } from "./Context.types";
 
 export const Context = createContext<ContextType | undefined>(undefined);
@@ -23,6 +23,10 @@ export const Provider = ({ children }: { children: ReactNode }) => {
   const infoHeight = useSharedValue(0);
   const tabBarHeight = useSharedValue(0);
 
+  const sumHeight = useDerivedValue(() => {
+    return headerHeight.value + infoHeight.value + tabBarHeight.value;
+  });
+
   return (
     <Context.Provider
       value={{
@@ -34,6 +38,7 @@ export const Provider = ({ children }: { children: ReactNode }) => {
         headerHeight,
         infoHeight,
         tabBarHeight,
+        sumHeight,
       }}
     >
       {children}

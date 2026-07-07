@@ -9,4 +9,5 @@ export interface ContextType {
   headerHeight: SharedValue<number>;
   infoHeight: SharedValue<number>;
   tabBarHeight: SharedValue<number>;
+  sumHeight: SharedValue<number>;
 }

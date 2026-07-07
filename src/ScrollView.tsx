@@ -1,22 +1,26 @@
-import React, { forwardRef, ReactNode, useCallback } from "react";
+import React, { forwardRef, ReactNode } from "react";
 import { Dimensions } from "react-native";
 import Animated, {
   scrollTo,
   useAnimatedReaction,
   useAnimatedRef,
   useAnimatedScrollHandler,
-  useAnimatedStyle,
   useSharedValue,
 } from "react-native-reanimated";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { ListBoundary } from "./components/ListBoundary";
 import { useCoreContext } from "./Context";
+import { useMergeRefs } from "./handlers/assignRefs";
 import { stickyScrollHandlers } from "./handlers/scrollHandlers";
+import { useBoundaryStyles } from "./hooks/useListHeaderStyle";
+import { StickyTabType } from "./types";
 
-const { height: SCREEN_HEIGHT } = Dimensions.get("window");
+const { height: SCREEN_HEIGHT } = Dimensions.get("screen");
 
 export interface ProfileStickyTabScrollViewProps extends React.ComponentProps<
   typeof Animated.ScrollView
 > {
-  stickyTab: { key: string; index: number };
+  stickyTab: StickyTabType;
   children: ReactNode;
 }
 
@@ -24,21 +28,21 @@ function ScrollViewInner(
   { stickyTab, children, ...props }: ProfileStickyTabScrollViewProps,
   forwardedRef: React.ForwardedRef<Animated.ScrollView>,
 ) {
-  const {
-    scrollY,
-    sharedCurrentIndex,
-    headerHeight,
-    infoHeight,
-    tabBarHeight,
-    syncTrigger,
-  } = useCoreContext();
+  const { scrollY, sharedCurrentIndex, infoHeight, syncTrigger, sumHeight } =
+    useCoreContext();
+
+  const coreFooterHeight = useSharedValue(0);
+  const { headerStyle, footerStyle } = useBoundaryStyles(coreFooterHeight);
 
   const animatedRef = useAnimatedRef<Animated.ScrollView>();
+  const setRefs = useMergeRefs(animatedRef, forwardedRef);
+
   const listY = useSharedValue(0);
 
   const onScroll = useAnimatedScrollHandler(
     stickyScrollHandlers(listY, stickyTab),
   );
+  const insets = useSafeAreaInsets();
 
   useAnimatedReaction(
     () => ({
@@ -65,73 +69,48 @@ function ScrollViewInner(
     },
   );
 
-  // Espaçador no topo para garantir que o conteúdo fique abaixo do cabeçalho
-  const listHeaderComponentStyle = useAnimatedStyle(() => ({
-    height: headerHeight.value + infoHeight.value + tabBarHeight.value,
-  }));
-
-  // Merge das referências seguro (mesma lógica da v1)
-  const setRefs = useCallback(
-    (node: any) => {
-      (animatedRef as any)(node);
-
-      if (typeof forwardedRef === "function") {
-        forwardedRef(node);
-      } else if (forwardedRef) {
-        (forwardedRef as React.MutableRefObject<any>).current = node;
-      }
-    },
-    [animatedRef, forwardedRef],
-  );
-
   const handleContentSizeChange = (w: number, h: number) => {
-    // Mantém o callback do usuário caso ele passe um por fora
     if (typeof props.onContentSizeChange === "function") {
-      props.onContentSizeChange?.(w, h);
+      props.onContentSizeChange(w, h);
     }
 
-    // No ScrollView, o método do lado JS é scrollTo({ y, animated })
+    // Mesma assinatura matemática para preenchimento de segurança da tela
+    const contentAbove = h - Math.max(sumHeight.get(), coreFooterHeight.get());
+    const targetMinHeight = SCREEN_HEIGHT - insets.top + infoHeight.get();
+    const requiredFooterHeight = targetMinHeight - contentAbove;
+
+    if (Math.abs(coreFooterHeight.get() - requiredFooterHeight) > 1) {
+      coreFooterHeight.set(requiredFooterHeight);
+    }
+
+    // ScrollView utiliza o método .scrollTo padrão ao invés de scrollToOffset
     animatedRef.current?.scrollTo({
       y: Math.min(scrollY.get(), infoHeight.get()),
       animated: false,
     });
   };
 
-  const contentContainerStyle = useAnimatedStyle(() => {
-    // A altura livre que a lista precisa ter para conseguir scrolar até o topo
-    // é o tamanho da tela menos o que fica fixo no topo (headerHeight + tabBarHeight)
-    const minHeight = SCREEN_HEIGHT - (headerHeight.value + tabBarHeight.value);
-
-    return {
-      minHeight: minHeight,
-    };
-  });
-
   return (
     <Animated.ScrollView
       {...props}
       ref={setRefs}
       onScroll={onScroll}
-      contentContainerStyle={[
-        props.contentContainerStyle,
-        contentContainerStyle,
-      ]}
       onContentSizeChange={handleContentSizeChange}
       scrollEventThrottle={props.scrollEventThrottle ?? 16}
     >
-      {/* O substituto do ListHeaderComponent */}
-      <Animated.View style={listHeaderComponentStyle} />
+      {/* Spacer do Cabeçalho Animado */}
+      <ListBoundary coreStyle={headerStyle} type="header" />
 
-      {/* O conteúdo real que o usuário passar dentro do ScrollView */}
       {children}
+
+      {/* Spacer do Rodapé para garantir rolagem mínima */}
+      <ListBoundary coreStyle={footerStyle} type="footer" />
     </Animated.ScrollView>
   );
 }
 
-const ScrollView = forwardRef(ScrollViewInner) as (
+export const ScrollView = forwardRef(ScrollViewInner) as (
   props: ProfileStickyTabScrollViewProps & {
     ref?: React.ForwardedRef<Animated.ScrollView>;
   },
 ) => ReturnType<typeof ScrollViewInner>;
-
-export { ScrollView };

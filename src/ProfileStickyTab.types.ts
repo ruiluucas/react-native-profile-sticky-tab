@@ -4,6 +4,7 @@ import {
   Route,
   SceneRendererProps,
 } from "react-native-tab-view";
+import { StickyTabType } from "./types";
 
 export default interface ProfileStickyTabProps {
   /**
@@ -25,7 +26,7 @@ export default interface ProfileStickyTabProps {
   tabKeyScenes: {
     title: string;
     key: string;
-    renderComponent: (stickyTab: { key: string; index: number }) => ReactNode;
+    renderComponent: (stickyTab: StickyTabType) => ReactNode;
     icon?: (color: string) => ReactNode;
   }[];
 }
