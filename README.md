@@ -1,3 +1,5 @@
+.
+
 # react-native-profile-sticky-tab
 
 Componente de abas com cabeçalho fixo e área de perfil recolhível para React Native.
@@ -76,12 +78,12 @@ export function ProfileScreen() {
 
 ### `ProfileStickyTab`
 
-| Prop | Tipo | Descrição |
-| --- | --- | --- |
-| `header` | `ReactNode` | Conteúdo fixo no topo da tela. |
-| `children` | `ReactNode` | Conteúdo recolhível abaixo do header, normalmente informações do perfil. |
-| `renderTabBar` | `(props) => ReactNode` | Renderiza a tab bar do `react-native-tab-view`. |
-| `tabKeyScenes` | `TabScene[]` | Lista de abas e seus respectivos componentes. |
+| Prop           | Tipo                   | Descrição                                                                |
+| -------------- | ---------------------- | ------------------------------------------------------------------------ |
+| `header`       | `ReactNode`            | Conteúdo fixo no topo da tela.                                           |
+| `children`     | `ReactNode`            | Conteúdo recolhível abaixo do header, normalmente informações do perfil. |
+| `renderTabBar` | `(props) => ReactNode` | Renderiza a tab bar do `react-native-tab-view`.                          |
+| `tabKeyScenes` | `TabScene[]`           | Lista de abas e seus respectivos componentes.                            |
 
 ### `tabKeyScenes`
 
