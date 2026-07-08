@@ -1,0 +1,17 @@
+{
+  "expo": {
+    "name": "react-native-profile-sticky-tab",
+    "slug": "react-native-profile-sticky-tab",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "reactnativeprofilestickytab",
+    "userInterfaceStyle": "automatic",
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    },
+    "android": {
+      "package": "com.ruiluucas.reactnativeprofilestickytab"
+    }
+  }
+}
