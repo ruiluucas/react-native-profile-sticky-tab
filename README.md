@@ -8,15 +8,9 @@ A biblioteca combina `react-native-tab-view`, `react-native-reanimated` e listas
 
 ### Exemplo básico
 
-<video src="./docs/example.mp4" controls width="320"></video>
+![](https://github.com/ruiluucas/react-native-profile-sticky-tab/docs/example.mp4)
 
-[Ver vídeo](./docs/example.mp4)
-
-### Exemplo estilo Instagram
-
-<video src="./docs/instagram-example.mp4" controls width="320"></video>
-
-[Ver vídeo](./docs/instagram-example.mp4)
+![](https://github.com/ruiluucas/react-native-profile-sticky-tab/docs/instagram-example.mp4)
 
 ## Recursos
 
