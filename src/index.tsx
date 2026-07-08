@@ -4,5 +4,6 @@ export type { ProfileStickyTabFlatListProps } from "./FlatList";
 export type { ProfileStickyTabFlashListProps } from "./FlashList";
 export type { ProfileStickyTabScrollViewProps } from "./ScrollView";
 
+export { useStickyTab } from "./useStickyTab";
 export { ProfileStickyTab };
 export default ProfileStickyTab;

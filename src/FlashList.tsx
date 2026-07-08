@@ -35,8 +35,14 @@ function FlashListInner<T>(
   { stickyTab, ...props }: ProfileStickyTabFlashListProps<T>,
   forwardedRef: React.ForwardedRef<FlashListRef<T>>,
 ) {
-  const { scrollY, sharedCurrentIndex, infoHeight, syncTrigger, sumHeight } =
-    useCoreContext();
+  const {
+    scrollY,
+    sharedCurrentIndex,
+    infoHeight,
+    syncTrigger,
+    sumHeight,
+    programmaticScroll,
+  } = useCoreContext();
 
   const coreFooterHeight = useSharedValue(0);
   const { headerStyle, footerStyle } = useBoundaryStyles(coreFooterHeight);
@@ -56,11 +62,27 @@ function FlashListInner<T>(
       scrollY: scrollY.value,
       syncTrigger: syncTrigger.value,
       sharedCurrentIndex: sharedCurrentIndex.value,
+      programmaticScroll: programmaticScroll.value,
     }),
     (state, previous) => {
       if (!previous) return;
 
       const isActive = stickyTab.index === state.sharedCurrentIndex;
+
+      if (
+        isActive &&
+        state.programmaticScroll.version !==
+          previous.programmaticScroll.version
+      ) {
+        scrollTo(
+          animatedRef,
+          0,
+          state.programmaticScroll.y,
+          state.programmaticScroll.animated,
+        );
+        return;
+      }
+
       const justBecameActive =
         isActive && stickyTab.index !== previous.sharedCurrentIndex;
       const shouldSyncInactive = !isActive && state.syncTrigger;

@@ -13,6 +13,11 @@ export const useCoreContext = () => {
 
 export const Provider = ({ children }: { children: ReactNode }) => {
   const syncTrigger = useSharedValue(false);
+  const programmaticScroll = useSharedValue({
+    y: 0,
+    animated: false,
+    version: 0,
+  });
 
   const scrollY = useSharedValue(0);
 
@@ -31,6 +36,7 @@ export const Provider = ({ children }: { children: ReactNode }) => {
     <Context.Provider
       value={{
         syncTrigger,
+        programmaticScroll,
         scrollY,
         currentIndex,
         setCurrentIndex,

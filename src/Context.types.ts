@@ -1,7 +1,14 @@
 import { SharedValue } from "react-native-reanimated";
 
+export interface ProgrammaticScroll {
+  y: number;
+  animated: boolean;
+  version: number;
+}
+
 export interface ContextType {
   syncTrigger: SharedValue<boolean>;
+  programmaticScroll: SharedValue<ProgrammaticScroll>;
   scrollY: SharedValue<number>;
   currentIndex: number;
   sharedCurrentIndex: SharedValue<number>;
