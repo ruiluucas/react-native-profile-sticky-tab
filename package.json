@@ -1,7 +1,7 @@
 {
   "name": "react-native-profile-sticky-tab",
-  "version": "1.0.2",
-  "description": "Componente de abas com cabeçalho fixo e área de perfil recolhível para React Native.",
+  "version": "1.1.0",
+  "description": " A React Native library for creating sticky headers and collapsible profile sections with synchronized scroll across FlatList, FlashList, and ScrollView. Built with Reanimated.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
