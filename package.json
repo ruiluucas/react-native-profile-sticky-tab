@@ -10,11 +10,7 @@
     "LICENSE"
   ],
   "scripts": {
-    "build": "tsc",
-    "start": "expo start",
-    "android": "expo run:android",
-    "ios": "expo run:ios",
-    "web": "expo start --web"
+    "build": "tsc"
   },
   "peerDependencies": {
     "react": ">=18.0.0",

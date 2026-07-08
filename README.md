@@ -6,7 +6,7 @@ This library combines `react-native-tab-view`, `react-native-reanimated`, and an
 
 |         Example         |         Instagram Example         |
 | :---------------------: | :-------------------------------: |
-| ![](./docs/example.gif) | ![](./docs/instagram-example.gif) |
+| ![](https://github.com/ruiluucas/react-native-profile-sticky-tab/blob/master/docs/example.gif) | ![](https://github.com/ruiluucas/react-native-profile-sticky-tab/blob/master/docs/instagram-example.gif) |
 
 ## Features
 
