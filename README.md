@@ -4,13 +4,9 @@ Componente de abas com header fixo e área de perfil recolhível para React Nati
 
 A biblioteca combina `react-native-tab-view`, `react-native-reanimated` e listas animadas para entregar uma experiência comum em telas de perfil: um header fixo no topo, uma área de informações que recolhe com o scroll e abas com posição sincronizada entre `FlatList`, `FlashList` e `ScrollView`.
 
-## Demos
-
-### Exemplo básico
-
-![](https://github.com/ruiluucas/react-native-profile-sticky-tab/docs/example.mp4)
-
-![](https://github.com/ruiluucas/react-native-profile-sticky-tab/docs/instagram-example.mp4)
+| Example | Instagram Example |
+| :---: | :---: |
+| ![](./docs/example.gif) | ![](./docs/instagram-example.gif) |
 
 ## Recursos
 
