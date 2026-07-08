@@ -1,39 +1,39 @@
 # react-native-profile-sticky-tab
 
-Componente de abas com header fixo e área de perfil recolhível para React Native.
+A tab component with a fixed header and collapsible profile area for React Native.
 
-A biblioteca combina `react-native-tab-view`, `react-native-reanimated` e listas animadas para entregar uma experiência comum em telas de perfil: um header fixo no topo, uma área de informações que recolhe com o scroll e abas com posição sincronizada entre `FlatList`, `FlashList` e `ScrollView`.
+This library combines `react-native-tab-view`, `react-native-reanimated`, and animated lists to deliver a common profile-screen experience: a fixed header at the top, a profile information area that collapses on scroll, and tabs with synchronized scroll position between `FlatList`, `FlashList`, and `ScrollView`.
 
-| Example | Instagram Example |
-| :---: | :---: |
+|         Example         |         Instagram Example         |
+| :---------------------: | :-------------------------------: |
 | ![](./docs/example.gif) | ![](./docs/instagram-example.gif) |
 
-## Recursos
+## Features
 
-- Header fixo no topo da tela.
-- Área de perfil recolhível abaixo do header.
-- Tab bar integrada ao `react-native-tab-view`.
-- Sincronização de scroll entre abas.
-- Suporte a `FlatList`, `FlashList` e `ScrollView`.
-- Controle programático via `useStickyTab`.
-- Scroll animado na thread de UI com Reanimated.
-- API composável para tab bars customizadas.
+* Fixed header at the top of the screen.
+* Collapsible profile area below the header.
+* Tab bar integrated with `react-native-tab-view`.
+* Scroll synchronization between tabs.
+* Support for `FlatList`, `FlashList`, and `ScrollView`.
+* Programmatic control through `useStickyTab`.
+* UI-thread animated scrolling with Reanimated.
+* Composable API for custom tab bars.
 
-## Instalação
+## Installation
 
 ```bash
 npm install react-native-profile-sticky-tab
 ```
 
-Instale também as peer dependencies:
+Also install the peer dependencies:
 
 ```bash
 npm install react-native-reanimated react-native-tab-view @shopify/flash-list
 ```
 
-Se o seu projeto ainda não usa Reanimated, finalize a configuração exigida pelo `react-native-reanimated` no app, incluindo o plugin do Babel quando necessário.
+If your project does not use Reanimated yet, make sure to complete the setup required by `react-native-reanimated` in your app, including the Babel plugin when necessary.
 
-## Uso Básico
+## Basic Usage
 
 ```tsx
 import ProfileStickyTab from "react-native-profile-sticky-tab";
@@ -68,11 +68,11 @@ export function ProfileScreen() {
           },
           {
             key: "about",
-            title: "Sobre",
+            title: "About",
             renderComponent: (stickyTab) => (
               <ProfileStickyTab.ScrollView stickyTab={stickyTab}>
                 <Text style={{ padding: 16 }}>
-                  Conteúdo da aba Sobre
+                  About tab content
                 </Text>
               </ProfileStickyTab.ScrollView>
             ),
@@ -84,7 +84,7 @@ export function ProfileScreen() {
             Rui Lucas
           </Text>
           <Text style={{ color: "white", paddingHorizontal: 16 }}>
-            Desenvolvedor React Native
+            React Native Developer
           </Text>
         </View>
       </ProfileStickyTab>
@@ -93,7 +93,7 @@ export function ProfileScreen() {
 }
 ```
 
-## Como a Estrutura Funciona
+## How the Structure Works
 
 ```tsx
 <ProfileStickyTab.Provider>
@@ -107,21 +107,21 @@ export function ProfileScreen() {
 </ProfileStickyTab.Provider>
 ```
 
-`ProfileStickyTab.Provider` guarda os estados compartilhados de scroll, aba ativa e alturas do layout.
+`ProfileStickyTab.Provider` stores the shared scroll state, active tab state, and layout heights.
 
-`header` fica fixo no topo da tela.
+`header` stays fixed at the top of the screen.
 
-`children` representa a área recolhível, normalmente foto, bio, estatísticas ou ações do perfil.
+`children` represents the collapsible area, usually used for the profile photo, bio, stats, or profile actions.
 
-`tabKeyScenes` define as abas e o componente renderizado em cada uma.
+`tabKeyScenes` defines the tabs and the component rendered for each one.
 
-Cada cena precisa renderizar um container da biblioteca e repassar o `stickyTab` recebido em `renderComponent`.
+Each scene must render one of the library containers and pass the `stickyTab` object received in `renderComponent`.
 
-## Containers de Aba
+## Tab Containers
 
 ### FlatList
 
-Use quando a aba renderiza uma lista padrão do React Native.
+Use it when the tab renders a standard React Native list.
 
 ```tsx
 <ProfileStickyTab.FlatList
@@ -134,7 +134,7 @@ Use quando a aba renderiza uma lista padrão do React Native.
 
 ### FlashList
 
-Use quando a aba renderiza listas grandes e você quer usar `@shopify/flash-list`.
+Use it when the tab renders large lists and you want to use `@shopify/flash-list`.
 
 ```tsx
 <ProfileStickyTab.FlashList
@@ -148,7 +148,7 @@ Use quando a aba renderiza listas grandes e você quer usar `@shopify/flash-list
 
 ### ScrollView
 
-Use quando a aba possui conteúdo livre, menor ou mais estático.
+Use it when the tab has free-form, smaller, or more static content.
 
 ```tsx
 <ProfileStickyTab.ScrollView stickyTab={stickyTab}>
@@ -156,9 +156,9 @@ Use quando a aba possui conteúdo livre, menor ou mais estático.
 </ProfileStickyTab.ScrollView>
 ```
 
-## Controle Programático
+## Programmatic Control
 
-Use `useStickyTab` em qualquer componente renderizado dentro do `ProfileStickyTab.Provider`.
+Use `useStickyTab` in any component rendered inside `ProfileStickyTab.Provider`.
 
 ```tsx
 import { useStickyTab } from "react-native-profile-sticky-tab";
@@ -183,52 +183,52 @@ export function CustomActions() {
 
       <Pressable onPress={() => setTab(1)}>
         <Text style={{ fontWeight: currentTab === 1 ? "700" : "400" }}>
-          Sobre
+          About
         </Text>
       </Pressable>
 
       <Pressable onPress={() => collapseHeader(true)}>
-        <Text>Recolher header</Text>
+        <Text>Collapse header</Text>
       </Pressable>
 
       <Pressable onPress={() => expandHeader(true)}>
-        <Text>Expandir header</Text>
+        <Text>Expand header</Text>
       </Pressable>
 
       <Pressable onPress={() => scrollToY(300, true)}>
-        <Text>Scroll para Y 300</Text>
+        <Text>Scroll to Y 300</Text>
       </Pressable>
     </View>
   );
 }
 ```
 
-Também é possível acessar o hook pelo namespace do componente:
+You can also access the hook through the component namespace:
 
 ```tsx
 const stickyTab = ProfileStickyTab.useStickyTab();
 ```
 
-## API do Hook
+## Hook API
 
-| Retorno | Tipo | Descrição |
-| --- | --- | --- |
-| `currentTab` | `number` | Índice da aba ativa no estado React. |
-| `setTab` | `(index: number) => void` | Altera a aba ativa programaticamente. |
-| `scrollToY` | `(y: number, animated?: boolean) => void` | Rola a aba ativa para uma posição vertical. |
-| `collapseHeader` | `(animated?: boolean) => void` | Rola até o limite que recolhe a área de perfil. |
-| `expandHeader` | `(animated?: boolean) => void` | Volta o scroll para o topo e expande a área de perfil. |
+| Return           | Type                                      | Description                                           |
+| ---------------- | ----------------------------------------- | ----------------------------------------------------- |
+| `currentTab`     | `number`                                  | Index of the active tab in React state.               |
+| `setTab`         | `(index: number) => void`                 | Changes the active tab programmatically.              |
+| `scrollToY`      | `(y: number, animated?: boolean) => void` | Scrolls the active tab to a vertical position.        |
+| `collapseHeader` | `(animated?: boolean) => void`            | Scrolls to the limit that collapses the profile area. |
+| `expandHeader`   | `(animated?: boolean) => void`            | Scrolls back to the top and expands the profile area. |
 
 ## Props
 
 ### `ProfileStickyTab`
 
-| Prop | Tipo | Descrição |
-| --- | --- | --- |
-| `header` | `ReactNode` | Conteúdo fixo no topo da tela. |
-| `children` | `ReactNode` | Conteúdo recolhível abaixo do header. |
-| `renderTabBar` | `(props) => ReactNode` | Função que renderiza a tab bar do `react-native-tab-view`. |
-| `tabKeyScenes` | `TabScene[]` | Lista de abas e seus respectivos componentes. |
+| Prop           | Type                   | Description                                                |
+| -------------- | ---------------------- | ---------------------------------------------------------- |
+| `header`       | `ReactNode`            | Fixed content at the top of the screen.                    |
+| `children`     | `ReactNode`            | Collapsible content below the header.                      |
+| `renderTabBar` | `(props) => ReactNode` | Function that renders the `react-native-tab-view` tab bar. |
+| `tabKeyScenes` | `TabScene[]`           | List of tabs and their respective components.              |
 
 ### `TabScene`
 
@@ -248,13 +248,13 @@ type StickyTabType = {
 
 ### Containers
 
-Todos os containers recebem a prop obrigatória `stickyTab`.
+All containers receive the required `stickyTab` prop.
 
-| Componente | Props adicionais |
-| --- | --- |
-| `ProfileStickyTab.FlatList` | Props de `Animated.FlatList`. |
-| `ProfileStickyTab.FlashList` | Props de `@shopify/flash-list`. |
-| `ProfileStickyTab.ScrollView` | Props de `Animated.ScrollView` e `children`. |
+| Component                     | Additional props                            |
+| ----------------------------- | ------------------------------------------- |
+| `ProfileStickyTab.FlatList`   | `Animated.FlatList` props.                  |
+| `ProfileStickyTab.FlashList`  | `@shopify/flash-list` props.                |
+| `ProfileStickyTab.ScrollView` | `Animated.ScrollView` props and `children`. |
 
 ## Exports
 
@@ -272,32 +272,15 @@ import type {
 } from "react-native-profile-sticky-tab";
 ```
 
-## Boas Práticas
+## Best Practices
 
-- Envolva a tela com `ProfileStickyTab.Provider`.
-- Use `ProfileStickyTab.FlatList`, `ProfileStickyTab.FlashList` ou `ProfileStickyTab.ScrollView` dentro de cada `renderComponent`.
-- Sempre repasse o objeto `stickyTab` recebido pela cena para o container da aba.
-- Use `FlashList` em listas grandes e informe `estimatedItemSize`.
-- Use `useStickyTab` somente dentro do provider.
-- Evite controlar manualmente o scroll das listas por fora se o objetivo for sincronizar com o header recolhível.
+* Wrap the screen with `ProfileStickyTab.Provider`.
+* Use `ProfileStickyTab.FlatList`, `ProfileStickyTab.FlashList`, or `ProfileStickyTab.ScrollView` inside each `renderComponent`.
+* Always pass the `stickyTab` object received by the scene to the tab container.
+* Use `FlashList` for large lists and provide `estimatedItemSize`.
+* Use `useStickyTab` only inside the provider.
+* Avoid manually controlling the list scroll from outside if your goal is to keep it synchronized with the collapsible header.
 
-## Exemplo Local
-
-Este repositório inclui um exemplo em `example/index.tsx`.
-
-Para rodar o projeto localmente:
-
-```bash
-npm install
-npm run start
-```
-
-Para checar a tipagem:
-
-```bash
-npm run build
-```
-
-## Licença
+## License
 
 MIT
