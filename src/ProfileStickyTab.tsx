@@ -135,10 +135,14 @@ const ProfileStickyTabComponent = ({
   );
 };
 
+const MemoizedFlashList = memo(FlashList) as typeof FlashList;
+const MemoizedFlatList = memo(FlatList) as typeof FlatList;
+const MemoizedScrollView = memo(ScrollView) as typeof ScrollView;
+
 const ProfileStickyTab = Object.assign(memo(ProfileStickyTabComponent), {
-  FlatList: memo(FlatList),
-  FlashList: memo(FlashList),
-  ScrollView: memo(ScrollView),
+  FlatList: MemoizedFlatList,
+  FlashList: MemoizedFlashList,
+  ScrollView: MemoizedScrollView,
   Provider: memo(Provider),
   useStickyTab,
 });
