@@ -59,8 +59,9 @@ function ScrollViewInner(
     }),
     (state, previous) => {
       if (!previous) return;
+  
       const isActive = stickyTab.index === state.sharedCurrentIndex;
-
+  
       if (
         isActive &&
         state.programmaticScroll.version !==
@@ -74,11 +75,13 @@ function ScrollViewInner(
         );
         return;
       }
-
+  
       const justBecameActive =
         isActive && stickyTab.index !== previous.sharedCurrentIndex;
-      const shouldSyncInactive = !isActive && state.syncTrigger;
-
+  
+      const shouldSyncInactive =
+        !isActive && state.syncTrigger && !previous.syncTrigger;
+  
       if (justBecameActive || shouldSyncInactive) {
         const globalHeaderY = Math.min(state.scrollY, infoHeight.value);
         if (
@@ -86,10 +89,12 @@ function ScrollViewInner(
           globalHeaderY >= infoHeight.value
         )
           return;
+  
         scrollTo(animatedRef, 0, globalHeaderY, false);
       }
     },
   );
+  
 
   const handleContentSizeChange = (w: number, h: number) => {
     if (typeof props.onContentSizeChange === "function") {
