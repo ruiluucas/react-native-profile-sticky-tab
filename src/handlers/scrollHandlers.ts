@@ -23,7 +23,7 @@ export function stickyScrollHandlers(
       "worklet";
       if (stickyTab.index === sharedCurrentIndex.value) syncTrigger.set(false);
     },
-    onEndDrag: () => {
+    onMomentumEnd: () => {
       "worklet";
       if (stickyTab.index === sharedCurrentIndex.value) syncTrigger.set(true);
     },

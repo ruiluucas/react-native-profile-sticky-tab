@@ -47,8 +47,8 @@ function FlashListInner<T>(
   const coreFooterHeight = useSharedValue(0);
   const { headerStyle, footerStyle } = useBoundaryStyles(coreFooterHeight);
 
-  const animatedRef = useAnimatedRef<FlashListRef<T>>();
-  const setRefs = useMergeRefs(animatedRef, forwardedRef);
+  const ref = useAnimatedRef<FlashListRef<T>>();
+  const setRefs = useMergeRefs(ref, forwardedRef);
 
   const listY = useSharedValue(0);
 
@@ -58,56 +58,53 @@ function FlashListInner<T>(
   const insets = useSafeAreaInsets();
 
 useAnimatedReaction(
-  () => ({
-    scrollY: scrollY.value,
-    syncTrigger: syncTrigger.value,
-    sharedCurrentIndex: sharedCurrentIndex.value,
-    programmaticScroll: programmaticScroll.value,
-  }),
-  (state, previous) => {
-    if (!previous) return;
+    () => ({
+      scrollY: scrollY.value,
+      syncTrigger: syncTrigger.value,
+      sharedCurrentIndex: sharedCurrentIndex.value,
+      programmaticScroll: programmaticScroll.value,
+    }),
+    (state, previous) => {
+      if (!previous) return;
 
-    const isActive = stickyTab.index === state.sharedCurrentIndex;
+      const isActive = stickyTab.index === state.sharedCurrentIndex;
 
-    if (
-      isActive &&
-      state.programmaticScroll.version !==
-        previous.programmaticScroll.version
-    ) {
-      scrollTo(
-        animatedRef,
-        0,
-        state.programmaticScroll.y,
-        state.programmaticScroll.animated,
-      );
-      return;
-    }
-
-    const justBecameActive =
-      isActive && stickyTab.index !== previous.sharedCurrentIndex;
-
-    const shouldSyncInactive =
-      !isActive && state.syncTrigger && !previous.syncTrigger;
-
-    if (justBecameActive || shouldSyncInactive) {
-      const globalHeaderY = Math.min(state.scrollY, infoHeight.value);
       if (
-        listY.value >= infoHeight.value &&
-        globalHeaderY >= infoHeight.value
-      )
+        isActive &&
+        state.programmaticScroll.version !==
+          previous.programmaticScroll.version
+      ) {
+        scrollTo(
+          ref,
+          0,
+          state.programmaticScroll.y,
+          state.programmaticScroll.animated,
+        );
         return;
+      }
 
-      scrollTo(animatedRef, 0, globalHeaderY, false);
-    }
-  },
-);
+      const justBecameActive =
+        isActive && stickyTab.index !== previous.sharedCurrentIndex;
+      const shouldSyncInactive = !isActive && state.syncTrigger;
+
+      if (justBecameActive || shouldSyncInactive) {
+        const globalHeaderY = Math.min(state.scrollY, infoHeight.value);
+        if (
+          listY.value >= infoHeight.value &&
+          globalHeaderY >= infoHeight.value
+        )
+          return;
+
+        scrollTo(ref, 0, globalHeaderY, false);
+      }
+    },
+  );
 
   const handleContentSizeChange = (w: number, h: number) => {
-    if (typeof props.onContentSizeChange === "function") {
+    if (typeof props.onContentSizeChange === "function") 
       props.onContentSizeChange(w, h);
-    }
+    
 
-    // Mesma lógica matemática para garantir a rolagem mínima necessária na FlashList
     const contentAbove = h - Math.max(sumHeight.get(), coreFooterHeight.get());
     const targetMinHeight = SCREEN_HEIGHT - insets.top + infoHeight.get();
     const requiredFooterHeight = targetMinHeight - contentAbove;
@@ -116,7 +113,7 @@ useAnimatedReaction(
       coreFooterHeight.set(requiredFooterHeight);
     }
 
-    animatedRef.current?.scrollToOffset({
+    ref.current?.scrollToOffset({
       offset: Math.min(scrollY.get(), infoHeight.get()),
       animated: false,
     });

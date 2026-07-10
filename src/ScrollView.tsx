@@ -40,8 +40,8 @@ function ScrollViewInner(
   const coreFooterHeight = useSharedValue(0);
   const { headerStyle, footerStyle } = useBoundaryStyles(coreFooterHeight);
 
-  const animatedRef = useAnimatedRef<Animated.ScrollView>();
-  const setRefs = useMergeRefs(animatedRef, forwardedRef);
+  const ref = useAnimatedRef<Animated.ScrollView>();
+  const setRefs = useMergeRefs(ref, forwardedRef);
 
   const listY = useSharedValue(0);
 
@@ -51,57 +51,53 @@ function ScrollViewInner(
   const insets = useSafeAreaInsets();
 
   useAnimatedReaction(
-    () => ({
-      scrollY: scrollY.value,
-      syncTrigger: syncTrigger.value,
-      sharedCurrentIndex: sharedCurrentIndex.value,
-      programmaticScroll: programmaticScroll.value,
-    }),
-    (state, previous) => {
-      if (!previous) return;
+      () => ({
+        scrollY: scrollY.value,
+        syncTrigger: syncTrigger.value,
+        sharedCurrentIndex: sharedCurrentIndex.value,
+        programmaticScroll: programmaticScroll.value,
+      }),
+      (state, previous) => {
+        if (!previous) return;
   
-      const isActive = stickyTab.index === state.sharedCurrentIndex;
+        const isActive = stickyTab.index === state.sharedCurrentIndex;
   
-      if (
-        isActive &&
-        state.programmaticScroll.version !==
-          previous.programmaticScroll.version
-      ) {
-        scrollTo(
-          animatedRef,
-          0,
-          state.programmaticScroll.y,
-          state.programmaticScroll.animated,
-        );
-        return;
-      }
-  
-      const justBecameActive =
-        isActive && stickyTab.index !== previous.sharedCurrentIndex;
-  
-      const shouldSyncInactive =
-        !isActive && state.syncTrigger && !previous.syncTrigger;
-  
-      if (justBecameActive || shouldSyncInactive) {
-        const globalHeaderY = Math.min(state.scrollY, infoHeight.value);
         if (
-          listY.value >= infoHeight.value &&
-          globalHeaderY >= infoHeight.value
-        )
+          isActive &&
+          state.programmaticScroll.version !==
+            previous.programmaticScroll.version
+        ) {
+          scrollTo(
+            ref,
+            0,
+            state.programmaticScroll.y,
+            state.programmaticScroll.animated,
+          );
           return;
+        }
   
-        scrollTo(animatedRef, 0, globalHeaderY, false);
-      }
-    },
-  );
+        const justBecameActive =
+          isActive && stickyTab.index !== previous.sharedCurrentIndex;
+        const shouldSyncInactive = !isActive && state.syncTrigger;
   
+        if (justBecameActive || shouldSyncInactive) {
+          const globalHeaderY = Math.min(state.scrollY, infoHeight.value);
+          if (
+            listY.value >= infoHeight.value &&
+            globalHeaderY >= infoHeight.value
+          )
+            return;
+  
+          scrollTo(ref, 0, globalHeaderY, false);
+        }
+      },
+    );
 
   const handleContentSizeChange = (w: number, h: number) => {
     if (typeof props.onContentSizeChange === "function") {
       props.onContentSizeChange(w, h);
     }
 
-    // Mesma assinatura matemática para preenchimento de segurança da tela
     const contentAbove = h - Math.max(sumHeight.get(), coreFooterHeight.get());
     const targetMinHeight = SCREEN_HEIGHT - insets.top + infoHeight.get();
     const requiredFooterHeight = targetMinHeight - contentAbove;
@@ -110,8 +106,7 @@ function ScrollViewInner(
       coreFooterHeight.set(requiredFooterHeight);
     }
 
-    // ScrollView utiliza o método .scrollTo padrão ao invés de scrollToOffset
-    animatedRef.current?.scrollTo({
+    ref.current?.scrollTo({
       y: Math.min(scrollY.get(), infoHeight.get()),
       animated: false,
     });

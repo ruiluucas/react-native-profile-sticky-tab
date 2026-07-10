@@ -50,49 +50,48 @@ function FlatListInner<T>(
   const insets = useSafeAreaInsets();
 
  useAnimatedReaction(
-   () => ({
-     scrollY: scrollY.value,
-     syncTrigger: syncTrigger.value,
-     sharedCurrentIndex: sharedCurrentIndex.value,
-     programmaticScroll: programmaticScroll.value,
-   }),
-   (state, previous) => {
-     if (!previous) return;
+     () => ({
+       scrollY: scrollY.value,
+       syncTrigger: syncTrigger.value,
+       sharedCurrentIndex: sharedCurrentIndex.value,
+       programmaticScroll: programmaticScroll.value,
+     }),
+     (state, previous) => {
+       if (!previous) return;
  
-     const isActive = stickyTab.index === state.sharedCurrentIndex;
+       const isActive = stickyTab.index === state.sharedCurrentIndex;
  
-     if (
-       isActive &&
-       state.programmaticScroll.version !==
-         previous.programmaticScroll.version
-     ) {
-       scrollTo(
-         ref,
-         0,
-         state.programmaticScroll.y,
-         state.programmaticScroll.animated,
-       );
-       return;
-     }
- 
-     const justBecameActive =
-       isActive && stickyTab.index !== previous.sharedCurrentIndex;
- 
-     const shouldSyncInactive =
-       !isActive && state.syncTrigger && !previous.syncTrigger;
- 
-     if (justBecameActive || shouldSyncInactive) {
-       const globalHeaderY = Math.min(state.scrollY, infoHeight.value);
        if (
-         listY.value >= infoHeight.value &&
-         globalHeaderY >= infoHeight.value
-       )
+         isActive &&
+         state.programmaticScroll.version !==
+           previous.programmaticScroll.version
+       ) {
+        console.log('scroll')
+         scrollTo(
+           ref,
+           0,
+           state.programmaticScroll.y,
+           state.programmaticScroll.animated,
+         );
          return;
+       }
  
-       scrollTo(ref, 0, globalHeaderY, false);
-     }
-   },
- );
+       const justBecameActive =
+         isActive && stickyTab.index !== previous.sharedCurrentIndex;
+       const shouldSyncInactive = !isActive && state.syncTrigger;
+ 
+       if (justBecameActive || shouldSyncInactive) {
+         const globalHeaderY = Math.min(state.scrollY, infoHeight.value);
+         if (
+           listY.value >= infoHeight.value &&
+           globalHeaderY >= infoHeight.value
+         )
+           return;
+         console.log('scroll')
+         scrollTo(ref, 0, globalHeaderY, false);
+       }
+     },
+   );
  
 
   const handleContentSizeChange = (w: number, h: number) => {
